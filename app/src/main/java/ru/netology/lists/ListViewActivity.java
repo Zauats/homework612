@@ -21,7 +21,6 @@ import java.util.Map;
 
 public class ListViewActivity extends AppCompatActivity {
 
-    List<String> from = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,16 +32,14 @@ public class ListViewActivity extends AppCompatActivity {
         List<Map<String, String>> values = prepareContent();
 
         BaseAdapter listContentAdapter = createAdapter(values);
-
         list.setAdapter(listContentAdapter);
     }
 
     @NonNull
     private BaseAdapter createAdapter(List<Map<String, String>> values) {
 
-        int[] texts = {findViewById(R.id.el1).getId(), findViewById(R.id.el2).getId()};
-        String[] fromTemp = (String[])from.toArray();
-        return new SimpleAdapter(this, values, android.R.layout.simple_list_item_1, fromTemp, texts);
+        int[] texts = {R.id.el1, R.id.el2};
+        return new SimpleAdapter(this, values, R.layout.list_item, new String[] {"Заголовок", "Подзаголовок"}, texts);
     }
 
     @NonNull
@@ -50,12 +47,10 @@ public class ListViewActivity extends AppCompatActivity {
         List<Map<String, String>> strings = new ArrayList<Map<String, String>>();
 
         String[] arrayContent = getString(R.string.large_text).split("\n\n");
-        for (int i = 0; i < arrayContent.length - 1; i += 2) {
+        for (int i = 0; i < arrayContent.length - 1; i++) {
             Map<String, String> content = new HashMap<String, String>();
-            content.put(arrayContent[i], Integer.toString(arrayContent[i].length()));
-            content.put(arrayContent[i + 1], Integer.toString(arrayContent[i + 1].length()));
-            from.add(arrayContent[i]);
-            from.add(arrayContent[i + 1]);
+            content.put("Заголовок", arrayContent[i]);
+            content.put("Подзаголовок", Integer.toString(arrayContent[i].length()));
             strings.add(content);
         }
         return strings;
