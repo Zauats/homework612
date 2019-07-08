@@ -27,8 +27,9 @@ import java.util.Map;
 
 public class ListViewActivity extends AppCompatActivity {
 
-
+    int a = 0;
     List<Map<String, String>> simpleAdapterContent = new ArrayList<>();
+    List<Map<String, String>> deleteElements = new ArrayList<>();
     SharedPreferences data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +53,14 @@ public class ListViewActivity extends AppCompatActivity {
         final BaseAdapter listContentAdapter = createAdapter(simpleAdapterContent);
         list.setAdapter(listContentAdapter);
 
+
         // удаляю элемент
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Map<String, String> element = (Map<String, String>)listContentAdapter.getItem(position);
                 simpleAdapterContent.remove(element);
+                deleteElements.add(element);
                 listContentAdapter.notifyDataSetChanged();
             }
         });
@@ -67,7 +70,14 @@ public class ListViewActivity extends AppCompatActivity {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                simpleAdapterContent = getContent();
+//                метод 1, который работает. При удалении элемента, добавляю его в отдельный список. Здесь перебираю этот список и добавляю все обратно.
+//                for (Map<String, String> listEl:deleteElements) {
+//                    simpleAdapterContent.add(listEl);
+//                }
+//                deleteElements.clear();
+
+//                метод 2, который не работает. Просто пересоздаю список
+//                simpleAdapterContent = getContent();
                 listContentAdapter.notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
             }
@@ -89,7 +99,7 @@ public class ListViewActivity extends AppCompatActivity {
 
         String[] arrayContent = data.getString("string", "").split("\n\n");
         for (int i = 0; i < arrayContent.length - 1; i++) {
-            Map<String, String> content = new HashMap<String, String>();
+            Map<String, String> content = new HashMap<>();
             content.put("Заголовок", arrayContent[i]);
             content.put("Подзаголовок", Integer.toString(arrayContent[i].length()));
             strings.add(content);
