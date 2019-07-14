@@ -31,7 +31,6 @@ public class ListViewActivity extends AppCompatActivity {
     ArrayList<Integer> removeElements = new ArrayList<>();
     int a = 0;
     List<Map<String, String>> simpleAdapterContent = new ArrayList<>();
-    List<Map<String, String>> deleteElements = new ArrayList<>();
     BaseAdapter listContentAdapter;
     SharedPreferences data;
     ListView list;
@@ -61,7 +60,6 @@ public class ListViewActivity extends AppCompatActivity {
                 Map<String, String> element = (Map<String, String>)listContentAdapter.getItem(position);
                 removeElements.add(simpleAdapterContent.indexOf(element));
                 simpleAdapterContent.remove(element);
-                deleteElements.add(element);
                 listContentAdapter.notifyDataSetChanged();
             }
         });
@@ -91,7 +89,6 @@ public class ListViewActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         ArrayList<Integer> indexes =  bundle.getIntegerArrayList("deleteIndexes");
         for (Integer index:indexes) {
-            deleteElements.add(simpleAdapterContent.get(index));
             simpleAdapterContent.remove(index.intValue());
             listContentAdapter.notifyDataSetChanged();
         }
