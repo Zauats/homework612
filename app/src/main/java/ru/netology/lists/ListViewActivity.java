@@ -34,6 +34,7 @@ public class ListViewActivity extends AppCompatActivity {
     List<Map<String, String>> deleteElements = new ArrayList<>();
     BaseAdapter listContentAdapter;
     SharedPreferences data;
+    ListView list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -42,7 +43,7 @@ public class ListViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final ListView list = findViewById(R.id.list);
+        list = findViewById(R.id.list);
 
         // добавляю данные в SharedPreference
         data = getPreferences(MODE_PRIVATE);
@@ -51,10 +52,6 @@ public class ListViewActivity extends AppCompatActivity {
             myEditor.putString("string", getString(R.string.large_text));
             myEditor.apply();
         }
-
-        simpleAdapterContent = getContent();
-        listContentAdapter = createAdapter(simpleAdapterContent);
-        list.setAdapter(listContentAdapter);
 
 
         // удаляю элемент
@@ -74,20 +71,11 @@ public class ListViewActivity extends AppCompatActivity {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                метод 1, который работает. При удалении элемента, добавляю его в отдельный список. Здесь перебираю этот список и добавляю все обратно.
-//                for (Map<String, String> listEl:deleteElements) {
-//                    simpleAdapterContent.add(listEl);
-//                }
-//                deleteElements.clear();
-
-//                метод 2, который не работает. Просто пересоздаю список
-//                simpleAdapterContent = getContent();
-                removeElements.clear();
-                listContentAdapter.notifyDataSetChanged();
+                makeList();
                 swipeLayout.setRefreshing(false);
             }
         });
-
+        makeList();
     }
 
     @Override
@@ -107,6 +95,12 @@ public class ListViewActivity extends AppCompatActivity {
             simpleAdapterContent.remove(index.intValue());
             listContentAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void makeList(){
+        simpleAdapterContent = getContent();
+        listContentAdapter = createAdapter(simpleAdapterContent);
+        list.setAdapter(listContentAdapter);
     }
 
     @NonNull
