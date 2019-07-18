@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,17 +80,19 @@ public class ListViewActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Bundle bundle = new Bundle();
-        bundle.putIntegerArrayList("deleteIndexes", removeElements);
+        outState.putIntegerArrayList("deleteIndexes", removeElements);
+        ArrayList<Integer> indexes = outState.getIntegerArrayList("deleteIndexes");
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState);
+    protected void onPostResume() {
+        super.onPostResume();
         Bundle bundle = new Bundle();
         ArrayList<Integer> indexes =  bundle.getIntegerArrayList("deleteIndexes");
-        for (Integer index:indexes) {
-            simpleAdapterContent.remove(index.intValue());
+        if (indexes != null){
+            for (Integer index:indexes) {
+                simpleAdapterContent.remove(index.intValue());
+            }
             listContentAdapter.notifyDataSetChanged();
         }
     }
