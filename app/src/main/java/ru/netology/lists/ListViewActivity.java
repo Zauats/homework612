@@ -81,14 +81,12 @@ public class ListViewActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList("deleteIndexes", removeElements);
-        ArrayList<Integer> indexes = outState.getIntegerArrayList("deleteIndexes");
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Bundle bundle = new Bundle();
-        ArrayList<Integer> indexes =  bundle.getIntegerArrayList("deleteIndexes");
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        ArrayList<Integer> indexes =  savedInstanceState.getIntegerArrayList("deleteIndexes");
         if (indexes != null){
             for (Integer index:indexes) {
                 simpleAdapterContent.remove(index.intValue());
